@@ -1,0 +1,20 @@
+{
+  // Customer module configs
+  "Customer": {
+    "dbConfig": {
+        "database": "development",
+        "username": "gdgyy",
+        "password": "qwe123!Q",
+        "host": "localhost",
+        "port": 3306
+    },
+    "redisUrl" : "redis://localhost:6379/1",
+    "secretOrKey": "secret",
+    "keys": ["key", "keykeys"],
+    "credit": {
+        "initialLimit": 100,
+        // Set low for development
+        "initialDays": 1
+    }
+  }
+}

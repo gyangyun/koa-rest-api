@@ -1,0 +1,41 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "demo",
+  "main": "start.js",
+  "author": "gdgyy",
+  "license": "MIT",
+  "scripts": {
+    "start": "node start.js",
+    "watch": "nodemon --exec npm run start",
+    "build": "babel src -d build",
+    "test": "npm run build; mocha --require 'babel-polyfill' --compilers js:babel-register"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "bcryptjs": "^2.4.3",
+    "config": "^1.25.1",
+    "faker": "^4.1.0",
+    "import-dir": "^0.0.1",
+    "jsonwebtoken": "^7.3.0",
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-compose": "^4.0.0",
+    "koa-convert": "^1.2.0",
+    "koa-generic-session": "^1.11.5",
+    "koa-logger": "^2.0.1",
+    "koa-passport": "^3.0.0",
+    "koa-redis": "^3.0.0",
+    "koa-router": "^7.1.1",
+    "koa-unless": "^1.0.7",
+    "mysql": "^2.13.0",
+    "oauth2orize-koa": "^1.3.2",
+    "passport-jwt": "^2.2.1",
+    "ratelimiter": "^3.0.3",
+    "sequelize": "^3.30.4",
+    "winston": "^2.3.1"
+  }
+}
