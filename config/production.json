@@ -1,7 +1,11 @@
 {
   "Customer": {
     "dbConfig": {
-      "host": "prod-db-server"
+        "database": "development",
+        "username": "gdgyy",
+        "password": "qwe123!Q",
+        "host": "localhost",
+        "port": 3306
     },
     "credit": {
       "initialDays": 30

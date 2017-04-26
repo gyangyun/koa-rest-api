@@ -2,7 +2,7 @@ import models from '../../models'
 import bcrypt from 'bcryptjs'
 import logger from '../../utils/logger'
 
-const log = logger(module)
+// const log = logger(module)
 const usersController = {}
 
 usersController.store = async (ctx, next) => {
@@ -18,7 +18,7 @@ usersController.store = async (ctx, next) => {
       }
     })
     await user.addRoles(roles)
-    log.info('created: ' + JSON.stringify(user))
+    // log.info('created: ' + JSON.stringify(user))
     ctx.rest({
       code: 'success',
       message: 'Created a user successfully'
@@ -42,7 +42,7 @@ usersController.update = async (ctx, next) => {
       email: ctx.request.body.email || user.email,
       password: bcrypt.hashSync(ctx.request.body.password, bcrypt.genSaltSync(10)) || user.password
     })
-    log.info('updated: ' + JSON.stringify(user))
+    // log.info('updated: ' + JSON.stringify(user))
     ctx.rest({
       code: 'success',
       message: 'Updated a user successfully'
@@ -56,7 +56,7 @@ usersController.destroy = async (ctx, next) => {
   try {
     let user = await models.User.findById(ctx.params.id)
     await user.destroy()
-    log.info('destroyed: ' + JSON.stringify(user))
+    // log.info('destroyed: ' + JSON.stringify(user))
     ctx.rest({
       code: 'success',
       message: 'Destroyed a user successfully'
@@ -71,7 +71,7 @@ usersController.bulkDestroy = async (ctx, next) => {
     let affectedRows = await models.User.destroy({
       'where': {'id': ctx.request.body.ids}
     })
-    log.info(`batchDestroied: ${affectedRows} records`)
+    // log.info(`batchDestroied: ${affectedRows} records`)
     ctx.rest({
       code: 'success',
       message: `Destroyed ${affectedRows} users successfully`
@@ -96,7 +96,7 @@ usersController.list = async (ctx, next) => {
         }
       ]
     })
-    log.info('list: ' + JSON.stringify(users))
+    // log.info('list: ' + JSON.stringify(users))
     ctx.rest({
       code: 'success',
       message: 'Index users successfully',
@@ -122,7 +122,7 @@ usersController.show = async (ctx, next) => {
         }
       ]
     })
-    log.info('showed: ' + JSON.stringify(user))
+    // log.info('showed: ' + JSON.stringify(user))
     ctx.rest({
       code: 'success',
       message: 'Showed a user successfully',

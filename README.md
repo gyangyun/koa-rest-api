@@ -151,15 +151,15 @@ node build/app.js
 
 ### 使用 PM2 部署
 
-当 app 开发完成并且测试通过，就可以将其部署在生产环境了。首先我们声明 `ecosystem.json` 用来维护 app 生产环境的配置：
+当 app 开发完成并且测试通过，就可以将其部署在生产环境了。首先我们声明 `pm2.json` 用来维护 app 生产环境的配置：
 
 ```json
 {
   "apps" : [
       {
-        "name"        : "koa2-example-app",
+        "name"        : "koa-rest-api",
         // 编译版本的 app 的入口
-        "script"      : "index.js",
+        "script"      : "start.js",
         // 在生产环节不用兼听文件的变化
         "watch"       : false,
         // 合并搜索实例产生的日志
@@ -169,7 +169,7 @@ node build/app.js
         "env": {
           // app 所需的环境变量
           "NODE_ENV": "production",
-          "PORT": 4000
+          "PORT": 3000
         },
         // 为 app 启动两个进程，并均衡负载。
         "instances": 2,
@@ -182,9 +182,9 @@ node build/app.js
 }
 ```
 
-如果你的 app 需要额外的服务（如一个定时任务），你可以把他们加到 ecosystem.json，他们会跟主服务同时启动。线上可以这样启动你的 app：
+如果你的 app 需要额外的服务（如一个定时任务），你可以把他们加到 pm2.json，他们会跟主服务同时启动。线上可以这样启动你的 app：
 
-    pm2 start ecosystem.json
+    pm2 start pm2.json
 
 保存当前进程列表：
 
