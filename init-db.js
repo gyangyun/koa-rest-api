@@ -1,14 +1,14 @@
-import db from './models'
-db.sequelize.sync().then(
-// db.sequelize.sync({force: true}).then(
-    console.log('db init over!')
-)
-
+const env = process.env.NODE_ENV || 'development'
+const src = env === 'production' ? './build/models' : './src/models'
+const db = require(src).default
 const models = db
-
-import faker from 'faker'
+const faker = require('faker')
 
 async function init () {
+  // 新建表
+  await db.sequelize.sync()
+  console.log('db init over!')
+
   // 新增角色，并绑定权限
   let role1 = await models.Role.create({
     name: 'admin',
@@ -61,17 +61,18 @@ async function init () {
   }
 
   // 新增管理用户，并绑定角色
-  let user = await models.User.create({
+  let user1 = await models.User.create({
     name: 'guoyy2',
     email: '13302331219@189.com',
     password: 'qwe123!Q'
   })
-  let role = await models.Role.findOne({
-    where: {
-      name: 'admin'
-    }
+  await user1.addRole(role1)
+  let user2 = await models.User.create({
+    name: 'test',
+    email: '13302330333@189.com',
+    password: 'qwe123!Q'
   })
-  await user.addRole(role)
+  await user2.addRole(role4)
 
   // 新增Fake测试数据
   let roles = await models.Role.findAll()
@@ -85,5 +86,10 @@ async function init () {
     await tmpUser.addRole(tmpRole)
   }
 }
+
+// db.sequelize.sync().then(
+// db.sequelize.sync({force: true}).then(
+    // console.log('db init over!')
+// )
 
 init()

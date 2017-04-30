@@ -26,13 +26,29 @@ China大陆用户请自行优化网络。
 
 ## 开发使用说明
 
-```bash
-git clone https://github.com/fourth04/koa-rest-api.git
+### 安装数据库
 
-cd mv koa-rest-api
-npm install
-npm run start
-```
+依赖数据库有：
+
+- mysql
+- redis
+
+### git clone
+
+    git clone https://github.com/fourth04/koa-rest-api.git
+
+### 修改配置文件
+
+修改config里面的数据库相关配置
+
+### 安装依赖
+
+    cd koa-rest-api
+    npm install
+
+### 测试运行
+
+    npm run start
 
 访问： [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
 

@@ -1,89 +1,89 @@
 import models from '../../models'
-import bcrypt from 'bcryptjs'
 import logger from '../../utils/logger'
 
-// const log = logger(module)
+const log = logger(module)
 const usersController = {}
 
 usersController.store = async (ctx, next) => {
   try {
-    let user = await models.User.create({
+    const user = await models.User.create({
       name: ctx.request.body.userName,
       email: ctx.request.body.email,
-      password: bcrypt.hashSync(ctx.request.body.password, 10)
+      password: ctx.request.body.password
     })
-    let roles = await models.Role.findAll({
+    const roles = await models.Role.findAll({
       where: {
-        name: ctx.request.body.roleNames
+        id: ctx.request.body.ids
       }
     })
     await user.addRoles(roles)
-    // log.info('created: ' + JSON.stringify(user))
     ctx.rest({
       code: 'success',
       message: 'Created a user successfully'
     })
-  } catch (err) {
-    throw new ctx.APIError('users:add_error', err)
+  } catch (e) {
+    log.error(e)
+    throw new ctx.APIError('users:add_error', e)
   }
 }
 
 usersController.update = async (ctx, next) => {
   try {
-    let user = await models.User.findById(ctx.params.id)
-    // let roles = await user.getRoles()
-    let roles = await models.Role.findAll({
+    const user = await models.User.findById(ctx.params.id)
+    const roles = await models.Role.findAll({
       where: {
-        name: ctx.request.body.roleNames
+        id: ctx.request.body.ids
       }
     })
     await user.setRoles(roles)
-    await user.update({
+    const data = {
+      name: ctx.request.body.userName || user.name,
       email: ctx.request.body.email || user.email,
-      password: bcrypt.hashSync(ctx.request.body.password, bcrypt.genSaltSync(10)) || user.password
-    })
-    // log.info('updated: ' + JSON.stringify(user))
+      password: ctx.request.body.password || user.password
+    }
+    await user.update(data)
     ctx.rest({
       code: 'success',
       message: 'Updated a user successfully'
     })
-  } catch (err) {
-    throw new ctx.APIError('users:update_error', err)
+  } catch (e) {
+    log.error(e)
+    throw new ctx.APIError('users:update_error', e)
   }
 }
 
 usersController.destroy = async (ctx, next) => {
   try {
-    let user = await models.User.findById(ctx.params.id)
+    const user = await models.User.findById(ctx.params.id)
     await user.destroy()
-    // log.info('destroyed: ' + JSON.stringify(user))
     ctx.rest({
       code: 'success',
       message: 'Destroyed a user successfully'
     })
-  } catch (err) {
-    throw new ctx.APIError('users:destroy_error', err)
+  } catch (e) {
+    log.error(e)
+    throw new ctx.APIError('users:destroy_error', e)
   }
 }
 
 usersController.bulkDestroy = async (ctx, next) => {
   try {
-    let affectedRows = await models.User.destroy({
-      'where': {'id': ctx.request.body.ids}
+    const affectedRows = await models.User.destroy({
+      where: {id: ctx.request.body.ids}
     })
-    // log.info(`batchDestroied: ${affectedRows} records`)
     ctx.rest({
       code: 'success',
       message: `Destroyed ${affectedRows} users successfully`
     })
-  } catch (err) {
-    throw new ctx.APIError('users:destroy_error', err)
+  } catch (e) {
+    log.error(e)
+    throw new ctx.APIError('users:destroy_error', e)
   }
 }
 
 usersController.list = async (ctx, next) => {
   try {
-    let users = await models.User.findAll({
+    const users = await models.User.findAll({
       attributes: ['id', 'name', 'email', 'created_at', 'updated_at'],
       include: [
         {
@@ -96,20 +96,20 @@ usersController.list = async (ctx, next) => {
         }
       ]
     })
-    // log.info('list: ' + JSON.stringify(users))
     ctx.rest({
       code: 'success',
-      message: 'Index users successfully',
+      message: 'List users successfully',
       data: users
     })
-  } catch (err) {
-    throw new ctx.APIError('users:index_error', err)
+  } catch (e) {
+    log.error(e)
+    throw new ctx.APIError('users:list_error', e)
   }
 }
 
 usersController.show = async (ctx, next) => {
   try {
-    let user = await models.User.findById(ctx.params.id, {
+    const user = await models.User.findById(ctx.params.id, {
       attributes: ['id', 'name', 'email', 'created_at', 'updated_at'],
       include: [
         {
@@ -122,14 +122,22 @@ usersController.show = async (ctx, next) => {
         }
       ]
     })
-    // log.info('showed: ' + JSON.stringify(user))
-    ctx.rest({
-      code: 'success',
-      message: 'Showed a user successfully',
-      data: user
-    })
-  } catch (err) {
-    throw new ctx.APIError('users:show_error', err)
+    if (user) {
+      ctx.rest({
+        code: 'success',
+        message: 'Showed a user successfully',
+        data: user
+      })
+    } else {
+      throw new ctx.APIError('users:show_error', 'No such record')
+    }
+  } catch (e) {
+    log.error(e)
+    if (e instanceof ctx.APIError) {
+      throw e
+    } else {
+      throw new ctx.APIError('users:show_error', e)
+    }
   }
 }
 

@@ -1,16 +1,22 @@
+import Router from 'koa-router'
 import usersController from '../../controllers/api/users'
 
-// * POST /api/users[/] => api.user.store()
-// * PATCH /api/users/:id => api.user.update()
-// * DELETE /api/users/:id => api.user.destroy()
-// * GET /api/users[/] => api.user.index()
-// * GET /api/users/:id => api.user.show()
+const router = Router({
+  prefix: '/users'
+})
+router.use('/', async (ctx, next) => {
+  if (ctx.state.user.isAdmin) {
+    await next()
+  } else {
+    // ctx.body = 'Unauthorized'
+    await next()
+  }
+})
 
-export default (router) => {
-  router.post('/users', usersController.store)
-  router.patch('/users/:id', usersController.update)
-  router.delete('/users/:id', usersController.destroy)
-  router.get('/users', usersController.list)
-  router.get('/users/:id', usersController.show)
-  router.post('/users/batchdelete', usersController.bulkDestroy)
-}
+router.post('/', usersController.store)
+router.patch('/:id', usersController.update)
+router.delete('/:id', usersController.destroy)
+router.get('/', usersController.list)
+router.get('/:id', usersController.show)
+router.post('/bulkdelete', usersController.bulkDestroy)
+export default router

@@ -29,10 +29,10 @@ async function generateTokens (user) {
       break
     } else {
       if (role.name.startsWith('normal')) {
-        let [max, duration] = role.name.split('qp')
+        let [max, duration] = role.name.replace('normal:', '').split('qp')
         switch (duration) {
           case 's':
-            duration = 1000
+            duration = 6 * 1000
             break
           case 't':
             duration = 60 * 1000
@@ -52,7 +52,7 @@ async function generateTokens (user) {
           default:
             duration = 60 * 1000
         }
-        [user.max, user.duration] = [max, duration]
+        [user.max, user.duration] = [Number(max), duration]
       }
       break
     }

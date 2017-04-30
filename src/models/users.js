@@ -22,7 +22,11 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       set: function (val) {
-        this.setDataValue('password', bcrypt.hashSync(val, 8))
+        if (val === this.password) {
+          this.setDataValue('password', val)
+        } else {
+          this.setDataValue('password', bcrypt.hashSync(val, 8))
+        }
       }
     },
     created_at: {
