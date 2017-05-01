@@ -62,28 +62,30 @@ async function init () {
 
   // 新增管理用户，并绑定角色
   let user1 = await models.User.create({
-    name: 'guoyy2',
-    email: '13302331219@189.com',
+    name: 'admin',
+    email: 'admin@189.com',
     password: 'qwe123!Q'
   })
   await user1.addRole(role1)
   let user2 = await models.User.create({
-    name: 'test',
-    email: '13302330333@189.com',
+    name: 'normal',
+    email: 'normal@126.com',
     password: 'qwe123!Q'
   })
   await user2.addRole(role4)
 
-  // 新增Fake测试数据
-  let roles = await models.Role.findAll()
-  for (var i = 0, len = 40; i < len; i++) {
-    let tmpUser = await models.User.create({
-      name: faker.name.firstName().toLowerCase(),
-      email: faker.internet.email(),
-      password: faker.lorem.words()
-    })
-    let tmpRole = roles[Math.floor(Math.random() * roles.length)]
-    await tmpUser.addRole(tmpRole)
+  if (env !== 'production') {
+    // 新增Fake测试数据
+    let roles = await models.Role.findAll()
+    for (var i = 0, len = 40; i < len; i++) {
+      let tmpUser = await models.User.create({
+        name: faker.name.firstName().toLowerCase(),
+        email: faker.internet.email(),
+        password: faker.lorem.words()
+      })
+      let tmpRole = roles[Math.floor(Math.random() * roles.length)]
+      await tmpUser.addRole(tmpRole)
+    }
   }
 }
 

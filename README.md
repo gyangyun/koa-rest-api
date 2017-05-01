@@ -276,6 +276,12 @@ Docker中Nginx运行命令(将上述配置文件任意命名放置于nginx_confi
 
 ## 部署后使用
 
+### 先初始化数据库
+
+初始化数据库，存于预配置的用户、角色、权限信息，主要是先添加Admin账号，然后才能用这个账号添加其他数据
+
+    node ./build/init-db.js
+
 ### Linux
 
 Linux环境下推荐使用[HTTPie](https://github.com/jakubroztocil/httpie)，一个cURL类似的命令行HTTP客户端
@@ -284,7 +290,7 @@ Linux环境下推荐使用[HTTPie](https://github.com/jakubroztocil/httpie)，�
 
 #### 获取Access token
 
-    http POST 127.0.0.1:3000/auth/token username='guoyy2' password='qwe123!Q' grant_type='password'
+    http POST 127.0.0.1:3000/auth/token username="admin" password="qwe123!Q" grant_type="password"
 
 #### 将Access token设置为环境变量方便使用
 
@@ -404,6 +410,17 @@ export JWT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW
 #### 限速规则说明
 
 本RESTFUL API针对用户限速，限速多少通过`设置用户角色名称`体现，角色名称统一为:`normal:\dqp\w`，例如`normal:30qps`，翻译过来就是：`普通用户：30 query per second`
+
+可用的单位有：
+
+|字符串|单词|意思|
+|---|---|---|
+|s|second|秒|
+|t|minute|分钟|
+|h|hour|小时|
+|d|day|天|
+|w|week|周|
+|m|month|月|
 
 ## 引入插件介绍
 
