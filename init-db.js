@@ -87,9 +87,4 @@ async function init () {
   }
 }
 
-// db.sequelize.sync().then(
-// db.sequelize.sync({force: true}).then(
-    // console.log('db init over!')
-// )
-
 init()

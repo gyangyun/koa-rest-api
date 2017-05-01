@@ -274,6 +274,137 @@ Docker中Nginx运行命令(将上述配置文件任意命名放置于nginx_confi
 
     $ docker run -itd -p 80:80 -p 443:443 -v `pwd`/nginx_config:/etc/nginx/conf.d nginx
 
+## 部署后使用
+
+### Linux
+
+Linux环境下推荐使用[HTTPie](https://github.com/jakubroztocil/httpie)，一个cURL类似的命令行HTTP客户端
+
+`注意：`HTTPie使用时，`Authorization`这类Headers携带的参数值使用双引号，作为Request Body使用的参数值使用单引号
+
+#### 获取Access token
+
+    http POST 127.0.0.1:3000/auth/token username='guoyy2' password='qwe123!Q' grant_type='password'
+
+#### 将Access token设置为环境变量方便使用
+
+```bash
+export JWT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiZ3VveXkyIiwiZW1haWwiOiIxMzMwMjMzMTIxOUAxODkuY29tIiwiY3JlYXRlZF9hdCI6IjIwMTctMDQtMzBUMDM6Mzc6NDAuMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDE3LTA0LTMwVDAzOjM3OjQwLjAwMFoiLCJSb2xlcyI6W3siaWQiOjEsIm5hbWUiOiJhZG1pbiIsImRpc3BsYXlfbmFtZSI6IlVzZXIgQWRtaW5pc3RyYXRvciIsImRlc2NyaXB0aW9uIjoiVXNlciBpcyBhbGxvd2VkIHRvIG1hbmFnZSBhbmQgZWRpdCBvdGhlciB1c2VycyIsIlBlcm1pc3Npb25zIjpbeyJpZCI6MSwibmFtZSI6ImVkaXQtdXNlcnMiLCJkaXNwbGF5X25hbWUiOiJFZGl0IFVzZXJzIiwiZGVzY3JpcHRpb24iOiJlZGl0IGV4aXN0aW5nIHVzZXJzIiwicGVybWlzc2lvbl9yb2xlIjp7ImNyZWF0ZWRfYXQiOiIyMDE3LTA0LTMwVDAzOjM3OjM4LjAwMFoiLCJ1cGRhdGVkX2F0IjoiMjAxNy0wNC0zMFQwMzozNzozOC4wMDBaIiwicGVybWlzc2lvbl9pZCI6MSwicm9sZV9pZCI6MX19LHsiaWQiOjIsIm5hbWUiOiJ2aWV3LWVkaXQiLCJkaXNwbGF5X25hbWUiOiJWaWV3IEVkaXQiLCJkZXNjcmlwdGlvbiI6IlZpZXcgYW5kIGVkaXQgdGhlIGNvbnRlbnQiLCJwZXJtaXNzaW9uX3JvbGUiOnsiY3JlYXRlZF9hdCI6IjIwMTctMDQtMzBUMDM6Mzc6MzguMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDE3LTA0LTMwVDAzOjM3OjM4LjAwMFoiLCJwZXJtaXNzaW9uX2lkIjoyLCJyb2xlX2lkIjoxfX1dLCJyb2xlX3VzZXIiOnsiY3JlYXRlZF9hdCI6IjIwMTctMDQtMzBUMDM6Mzc6NDAuMDAwWiIsInVwZGF0ZWRfYXQiOiIyMDE3LTA0LTMwVDAzOjM3OjQwLjAwMFoiLCJyb2xlX2lkIjoxLCJ1c2VyX2lkIjoxfX1dLCJpc0FkbWluIjp0cnVlLCJtYXgiOjk5OTk5OSwiZHVyYXRpb24iOjM2MDAwMDB9LCJpYXQiOjE0OTM1NjYxOTZ9.tRmIylOmcXjAJSzDGt9B-o7uDt3RScnThHLthedLjS8
+```
+
+#### 权限管理(需要Admin用户)
+
+```
+* POST /api/permissions[/] => api.permissions.store()
+* DELETE /api/permissions/:id => api.permissions.destroy()
+* POST /api/permissions/bulkdelete => api.permissions.bulkDestroy()
+* PATCH /api/permissions/:id => api.permissions.update()
+* GET /api/permissions[/] => api.permissions.index()
+* GET /api/permissions/:id => api.permissions.show()
+```
+
+**新增单个权限数据**
+
+    http POST 127.0.0.1:3000/api/permissions permissionName='edit-users' permissionDisplayName='Edit Users' permissionDescription='edit existing users' Authorization:"Bearer $JWT_TOKEN"
+
+**删除单个权限数据**
+
+    http DELETE 127.0.0.1:3000/api/permissions/4 Authorization:"Bearer $JWT_TOKEN"
+
+**删除多个权限数据**
+
+    http POST 127.0.0.1:3000/api/permissions/bulkdelete permissionIds:='[4, 5]' Authorization:"Bearer $JWT_TOKEN"
+
+**更改单个权限数据**
+
+    http PATCH 127.0.0.1:3000/api/permissions permissionName='edit-users' permissionDisplayName='Edit Users' permissionDescription='edit existing users' Authorization:"Bearer $JWT_TOKEN"
+
+**查询所有权限数据**
+
+    http 127.0.0.1:3000/api/permissions Authorization:"Bearer $JWT_TOKEN"
+
+**查询单个权限数据**
+
+    http 127.0.0.1:3000/api/permissions/4 Authorization:"Bearer $JWT_TOKEN"
+
+#### 角色管理(需要Admin用户)
+
+```
+* POST /api/roles[/] => api.roles.store()
+* DELETE /api/roles/:id => api.roles.destroy()
+* POST /api/roles/bulkdelete => api.roles.bulkDestroy()
+* PATCH /api/roles/:id => api.roles.update()
+* GET /api/roles[/] => api.roles.index()
+* GET /api/roles/:id => api.roles.show()
+```
+
+**新增单个角色数据**
+
+    http POST 127.0.0.1:3000/api/roles roleName='normal:30qps' roleDisplayName='30 QPS Normal User' roleDescription='User is allowed to view and edit the content, his ratelimit is 30qps' permissionIds:='[4, 5]' Authorization:"Bearer $JWT_TOKEN"
+
+**删除单个角色数据**
+
+    http DELETE 127.0.0.1:3000/api/roles/4 Authorization:"Bearer $JWT_TOKEN"
+
+**删除多个角色数据**
+
+    http POST 127.0.0.1:3000/api/roles/bulkdelete roleIds:='[4, 5]' Authorization:"Bearer $JWT_TOKEN"
+
+**更改单个角色数据**
+
+    http PATCH 127.0.0.1:3000/api/roles roleName='normal:30qps' roleDisplayName='30 QPS Normal User' roleDescription='User is allowed to view and edit the content, his ratelimit is 30qps' permissionIds:='[4, 5]' Authorization:"Bearer $JWT_TOKEN"
+
+**查询所有角色数据**
+
+    http 127.0.0.1:3000/api/roles Authorization:"Bearer $JWT_TOKEN"
+
+**查询单个角色数据**
+
+    http 127.0.0.1:3000/api/roles/4 Authorization:"Bearer $JWT_TOKEN"
+
+#### 用户管理(需要Admin用户)
+
+```
+* POST /api/users[/] => api.users.store()
+* DELETE /api/users/:id => api.users.destroy()
+* POST /api/users/bulkdelete => api.users.bulkDestroy()
+* PATCH /api/users/:id => api.users.update()
+* GET /api/users[/] => api.users.index()
+* GET /api/users/:id => api.users.show()
+```
+
+**新增单个用户数据**
+
+    http POST 127.0.0.1:3000/api/users username='test4' email='123456789@189.com' password='qwe123!Q' roleIds:='[4, 5]' Authorization:"Bearer $JWT_TOKEN"
+
+**删除单个用户数据**
+
+    http DELETE 127.0.0.1:3000/api/users/4 Authorization:"Bearer $JWT_TOKEN"
+
+**删除多个用户数据**
+
+    http POST 127.0.0.1:3000/api/users/bulkdelete userIds:='[4, 5]' Authorization:"Bearer $JWT_TOKEN"
+
+**更改单个用户数据**
+
+    http PATCH 127.0.0.1:3000/api/users/4 username='test4' email='123456789@189.com' password='qwe123!Q' roleIds:='[4, 5]' Authorization:"Bearer $JWT_TOKEN"
+
+**查询所有用户数据**
+
+    http 127.0.0.1:3000/api/users Authorization:"Bearer $JWT_TOKEN"
+
+**查询单个用户数据**
+
+    http 127.0.0.1:3000/api/users/4 Authorization:"Bearer $JWT_TOKEN"
+
+#### 普通用户修改密码
+
+    http PATCH 127.0.0.1:3000/api/users/4 username='test4' email='123456789@189.com' password='qwe123!Q' Authorization:"Bearer $JWT_TOKEN"
+
+#### 限速规则说明
+
+本RESTFUL API针对用户限速，限速多少通过`设置用户角色名称`体现，角色名称统一为:`normal:\dqp\w`，例如`normal:30qps`，翻译过来就是：`普通用户：30 query per second`
+
 ## 引入插件介绍
 
 > 引入插件的版本将会持续更新

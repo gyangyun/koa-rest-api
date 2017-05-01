@@ -7,13 +7,13 @@ const usersController = {}
 usersController.store = async (ctx, next) => {
   try {
     const user = await models.User.create({
-      name: ctx.request.body.userName,
+      name: ctx.request.body.username,
       email: ctx.request.body.email,
       password: ctx.request.body.password
     })
     const roles = await models.Role.findAll({
       where: {
-        id: ctx.request.body.ids
+        id: ctx.request.body.roleIds
       }
     })
     await user.addRoles(roles)
@@ -32,12 +32,12 @@ usersController.update = async (ctx, next) => {
     const user = await models.User.findById(ctx.params.id)
     const roles = await models.Role.findAll({
       where: {
-        id: ctx.request.body.ids
+        id: ctx.request.body.roleIds
       }
     })
     await user.setRoles(roles)
     const data = {
-      name: ctx.request.body.userName || user.name,
+      name: ctx.request.body.username || user.name,
       email: ctx.request.body.email || user.email,
       password: ctx.request.body.password || user.password
     }
@@ -69,7 +69,7 @@ usersController.destroy = async (ctx, next) => {
 usersController.bulkDestroy = async (ctx, next) => {
   try {
     const affectedRows = await models.User.destroy({
-      where: {id: ctx.request.body.ids}
+      where: {id: ctx.request.body.userIds}
     })
     ctx.rest({
       code: 'success',

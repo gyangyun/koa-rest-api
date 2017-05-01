@@ -1,4 +1,3 @@
-import passport from 'passport'
 import jwt from 'jsonwebtoken'
 import oauth2orize from 'oauth2orize-koa'
 import compose from 'koa-compose'
@@ -93,9 +92,9 @@ server.exchange(oauth2orize.exchange.password(async (client, username, password,
     const isMatch = await user.authenticate(password)
     if (!isMatch) return false
     return await generateTokens(user)
-  } catch (err) {
+  } catch (e) {
     // Signal that there was an error processing the request
-    log.error(err)
+    log.error(e)
     return false
   }
 }))
@@ -113,8 +112,4 @@ export function token () {
     server.token(),
     server.errorHandler()
   ])
-}
-
-export function authorize () {
-  return passport.authenticate('jwt', { session: false })
 }

@@ -13,7 +13,7 @@ rolesController.store = async (ctx, next) => {
     })
     const permissions = await models.Permission.findAll({
       where: {
-        id: ctx.request.body.ids
+        id: ctx.request.body.permissionIds
       }
     })
     await role.addPermissions(permissions)
@@ -32,7 +32,7 @@ rolesController.update = async (ctx, next) => {
     const role = await models.Role.findById(ctx.params.id)
     const permissions = await models.Permission.findAll({
       where: {
-        id: ctx.request.body.ids
+        id: ctx.request.body.permissionIds
       }
     })
     await role.setPermissions(permissions)
@@ -69,7 +69,7 @@ rolesController.destroy = async (ctx, next) => {
 rolesController.bulkDestroy = async (ctx, next) => {
   try {
     const affectedRows = await models.Role.destroy({
-      where: {id: ctx.request.body.ids}
+      where: {id: ctx.request.body.roleIds}
     })
     ctx.rest({
       code: 'success',

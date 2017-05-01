@@ -8,8 +8,7 @@ router.use('/', async (ctx, next) => {
   if (ctx.state.user.isAdmin) {
     await next()
   } else {
-    // ctx.body = 'Unauthorized'
-    await next()
+    ctx.body = 'Unauthorized'
   }
 })
 

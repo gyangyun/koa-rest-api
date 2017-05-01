@@ -57,7 +57,7 @@ pmssController.destroy = async (ctx, next) => {
 pmssController.bulkDestroy = async (ctx, next) => {
   try {
     const affectedRows = await models.Permission.destroy({
-      where: {id: ctx.request.body.ids}
+      where: {id: ctx.request.body.permissionIds}
     })
     ctx.rest({
       code: 'success',
