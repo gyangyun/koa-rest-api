@@ -71,10 +71,10 @@ China大陆用户请自行优化网络。
 - `test` script 首先执行 build script 然后使用 `mocha` 测试。Mocha 依赖两个模块：`babel-polyfill` —— 用来提供编译运行时的依赖，`babel-register` —— 执行之前编译测试文件。
 
 ```bash
-npm start # 开发模式和生产模式都从此命令启动，
-npm watch # 开启开发模式之后对于 /src 目录内的任何改动会自动热替换生效
+npm run start # 开发模式和生产模式都从此命令启动，
+npm run watch # 开启开发模式之后对于 /src 目录内的任何改动会自动热替换生效
 npm run build # build
-npm test # 单元测试
+npm run test # 单元测试
 ```
 
 ## 开发环境说明
