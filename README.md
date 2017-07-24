@@ -286,11 +286,14 @@ Docker中Nginx运行命令(将上述配置文件任意命名放置于nginx_confi
 
 Linux环境下推荐使用[HTTPie](https://github.com/jakubroztocil/httpie)，一个cURL类似的命令行HTTP客户端
 
-`注意：`HTTPie使用时，`Authorization`这类Headers携带的参数值使用双引号，作为Request Body使用的参数值使用单引号
+`注意：` Linux环境下：HTTPie使用时
+
+- 双引号，只有双引号内才可使用环境变量，即`Authorization`这类Headers携带的参数值使用双引号
+- 单引号，一般使用单引号，即作为Request Body使用的参数值使用单引号
 
 #### 获取Access token
 
-    http POST 127.0.0.1:3000/auth/token username="admin" password="qwe123!Q" grant_type="password"
+    http POST 127.0.0.1:3000/auth/token username='admin' password='qwe123!Q' grant_type='password'
 
 #### 将Access token设置为环境变量方便使用
 
@@ -311,7 +314,7 @@ export JWT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW
 
 **新增单个权限数据**
 
-    http POST 127.0.0.1:3000/api/permissions permissionName='edit-users' permissionDisplayName='Edit Users' permissionDescription='edit existing users' Authorization:"Bearer $JWT_TOKEN"
+    http POST 127.0.0.1:3000/api/permissions permissionName='test' permissionDisplayName='test' permissionDescription='test' Authorization:"Bearer $JWT_TOKEN"
 
 **删除单个权限数据**
 
@@ -323,7 +326,7 @@ export JWT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW
 
 **更改单个权限数据**
 
-    http PATCH 127.0.0.1:3000/api/permissions permissionName='edit-users' permissionDisplayName='Edit Users' permissionDescription='edit existing users' Authorization:"Bearer $JWT_TOKEN"
+    http PATCH 127.0.0.1:3000/api/permissions permissionName='test' permissionDisplayName='test' permissionDescription='test' Authorization:"Bearer $JWT_TOKEN"
 
 **查询所有权限数据**
 

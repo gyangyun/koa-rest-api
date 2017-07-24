@@ -4,7 +4,7 @@ import { isJwtAuthenticated } from '../../controllers/auth'
 import ratelimit from '../../middlewares/ratelimit2'
 import redis from 'redis'
 
-const client = redis.createClient(6379, '127.0.0.1')
+const client = redis.createClient()
 
 const ratelimiter = ratelimit({
   db: client,
